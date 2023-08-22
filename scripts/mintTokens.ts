@@ -8,7 +8,11 @@ async function main() {
   const [deployer] = await hre.ethers.getSigners()
 
   const tf = await hre.deployments.get("TokenFactory")
-  const tokenFactory: TokenFactory = new (hre.ethers as any).Contract(tf.address, tf.abi, deployer)
+  const tokenFactory: TokenFactory = await hre.ethers.getContractAt(
+    "TokenFactory",
+    tf.address,
+    deployer
+  )
 
   const tx = await tokenFactory.mintTokens(3, hre.ethers.parseEther("1000"))
   await tx.wait()
@@ -22,7 +26,7 @@ async function main() {
   }
 
   for (var address of tokenAddresses) {
-    const token: Token = new (hre.ethers as any).Contract(address, tokenAbi, deployer)
+    const token: Token = await hre.ethers.getContractAt("Token", address, deployer)
     const name: string = await token.name()
     const symbol: string = await token.symbol()
     const weight: string = hre.ethers.formatUnits(await tokenFactory.getTokenWeight(address), 0)
@@ -30,7 +34,7 @@ async function main() {
     obj.tokens.push(tkn)
   }
 
-  fs.writeFileSync("utils/data/tokens.json", JSON.stringify(obj))
+  fs.writeFileSync("utils/data/tokens.json", JSON.stringify(obj), { flag: "wx" })
 
   console.log("New tokens minted!")
 }

@@ -23,22 +23,18 @@ async function main() {
   console.log("Before swap:")
   console.log("\tApein:")
   for (let tokenInfo of tokensJSON.tokens) {
-    const token: ERC20 = new (hre.ethers as any).Contract(tokenInfo.address, erc20abi, deployer)
+    const token: ERC20 = await hre.ethers.getContractAt("ERC20", tokenInfo.address, deployer)
     const balance: bigint = await token.balanceOf(apeinDeploymnet.address)
     console.log(`\t\t${tokenInfo.name}: ${balance}`)
   }
   console.log("\tOneInch:")
   for (let tokenInfo of tokensJSON.tokens) {
-    const token: ERC20 = new (hre.ethers as any).Contract(tokenInfo.address, erc20abi, deployer)
+    const token: ERC20 = await hre.ethers.getContractAt("ERC20", tokenInfo.address, deployer)
     const balance: bigint = await token.balanceOf(oneInchDeployment.address)
     console.log(`\t\t${tokenInfo.name}: ${balance}`)
   }
 
-  const apein: Apein = new (hre.ethers as any).Contract(
-    apeinDeploymnet.address,
-    apeinDeploymnet.abi,
-    deployer
-  )
+  const apein: Apein = await hre.ethers.getContractAt("Apein", apeinDeploymnet.address, deployer)
   const executorDeployment = await hre.deployments.get("AggregationRouter")
 
   const txSwap = await apein.swapApein(
@@ -54,13 +50,13 @@ async function main() {
   console.log("After swap:")
   console.log("\tApein:")
   for (let tokenInfo of tokensJSON.tokens) {
-    const token: ERC20 = new (hre.ethers as any).Contract(tokenInfo.address, erc20abi, deployer)
+    const token: ERC20 = await hre.ethers.getContractAt("ERC20", tokenInfo.address, deployer)
     const balance: bigint = await token.balanceOf(apeinDeploymnet.address)
     console.log(`\t\t${tokenInfo.name}: ${balance}`)
   }
   console.log("\tOneInch:")
   for (let tokenInfo of tokensJSON.tokens) {
-    const token: ERC20 = new (hre.ethers as any).Contract(tokenInfo.address, erc20abi, deployer)
+    const token: ERC20 = await hre.ethers.getContractAt("ERC20", tokenInfo.address, deployer)
     const balance: bigint = await token.balanceOf(oneInchDeployment.address)
     console.log(`\t\t${tokenInfo.name}: ${balance}`)
   }

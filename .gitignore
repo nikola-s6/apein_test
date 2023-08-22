@@ -10,3 +10,5 @@ cache
 artifacts
 deployments
 
+utils/data/tokens.json
+
